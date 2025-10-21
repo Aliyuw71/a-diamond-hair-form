@@ -129,7 +129,7 @@ button:hover {
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 450px) {
   form {
     padding: 15px;
   }
