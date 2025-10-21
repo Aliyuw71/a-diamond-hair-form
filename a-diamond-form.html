@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>A-diamond hair</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="form-container">
+        <form id="hairForm" enctype="multipart/form-data">
+          <div class="header">
+            <img
+              src="C:\Users\USER\Documents\Projects\a-diamond\a-diamond-logo.png"
+              alt="A-Diamond Hair Logo"
+            />
+            <span>A-Diamond Hair</span>
+          </div>
+          <div class="header">
+            <p>Business hours: 8 a.m. – 8 p.m.</p>
+          </div>
+
+          <label for="name">Name: </label>
+          <input
+            type="text"
+            required
+            id="name"
+            name="name"
+            placeholder="A-diamond"
+          />
+          <br /><br />
+          <label for="email">Email: </label>
+          <input
+            type="email"
+            required
+            id="email"
+            name="email"
+            placeholder="a-diamond.com"
+          />
+          <br /><br />
+          <label for="phoneNumber">Phone Number: </label>
+          <input
+            type="number"
+            required
+            id="phoneNumber"
+            name="phoneNumber"
+            placeholder="09012345.."
+            min="0"
+          />
+          <br /><br />
+          <label for="style">Choose hairstyle:</label>
+          <select id="style" name="style" onchange="updateTime()">
+            <option value="">--Select--</option>
+            <option value="Braids">Braids</option>
+            <option value="Cornrows">Cornrows</option>
+            <option value="Dreadlocks">Dreadlocks</option>
+            <option value="Wig Install">Wig Install</option>
+            <option value="Ponytail">Ponytail</option>
+          </select>
+          <br /><br />
+          <label for="others"
+            >If your style isn’t listed, please describe it here:
+          </label>
+          <textarea
+            name="otherstyles"
+            id="others"
+            maxlength="500"
+            name="others"
+            placeholder="I want do shuku with curve on the left and all back on the right side"
+          ></textarea>
+          <br /><br />
+          <label for="image"
+            >Please Attach an image if you'd like to show your preffered
+            style</label
+          >
+          <input
+            type="file"
+            id="image"
+            name="hairstyle-image"
+            accept="image/*"
+          />
+          <br /><br />
+          <label for="startTime"
+            >Please choose your preferred start time for the hair
+            session.</label
+          >
+          <input
+            type="number"
+            name="startTime"
+            id="startTime"
+            placeholder="8"
+            required
+            min="1"
+            max="12"
+          /><span id="prompt"></span> <br /><br />
+          <label for="time">Estimated time (hours):</label>
+          <input type="text" id="time" readonly name="estimated-time" />
+
+          <br /><br />
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+
+      <div class="thank-message" id="thankMessage">
+        <h1>🎉 Thank you for booking a hair session with us!</h1>
+      </div>
+    </div>
+
+    <script>
+      const webhook_url =
+        "https://p01--n8n-hair-booking--ydqqpgdgh659.code.run/webhook-test/a-diamond-hair";
+      const form = document.getElementById("hairForm");
+      const thankMessage = document.getElementById("thankMessage");
+      const prompter = document.getElementById("prompt");
+      const startTime = document.getElementById("startTime");
+      startTime.addEventListener("input", () => {
+        const hour = parseInt(startTime.value);
+        if (hour >= 8 && hour <= 11) {
+          prompter.textContent = "a.m";
+        } else if ((hour >= 12 && hour <= 12) || (hour >= 1 && hour <= 7)) {
+          prompter.textContent = "p.m";
+        } else {
+          prompter.textContent = "";
+        }
+      });
+      if (startTime.value >= "8" && startTime.value <= "11") {
+        prompter.innerHTML = "a.m";
+      } else {
+        prompter.innerHTML = "p.m";
+      }
+      function updateTime() {
+        const style = document.getElementById("style").value;
+        const times = {
+          Braids: "4 hours",
+          Cornrows: "2 hours",
+          Dreadlocks: "3 hours",
+          "Wig Install": "1.5 hours",
+          Ponytail: "1 hour",
+        };
+        const timeForHairDone = times[style];
+        document.getElementById("time").value = timeForHairDone || "";
+      }
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        try {
+          await fetch(webhook_url, { method: "POST", body: formData });
+          form.remove();
+          thankMessage.style.display = "block";
+        } catch (error) {
+          alert("oops!... Something went wrong. Please try again");
+        }
+      });
+    </script>
+  </body>
+</html>
